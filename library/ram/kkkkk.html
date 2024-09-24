@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: #333;
+            padding: 1em;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            padding: 20px;
+        }
+        .form-container {
+            margin: 20px 0;
+        }
+        .form-container h2 {
+            margin-top: 0;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="text"], input[type="password"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="#login">Login</a>
+        <a href="#register">Register</a>
+        <a href="#add-book">Add Book</a>
+        <a href="#update-book">Update Book</a>
+        <a href="#issue-book">Issue Book</a>
+        <a href="#return-book">Return Book</a>
+        <a href="#make-fine">Add Fine</a>
+    </nav>
+
+    <div class="container">
+        <h1>Welcome to the Library Management System</h1>
+
+        <!-- Login Form -->
+        <div class="form-container" id="login">
+            <h2>Login</h2>
+            <form action="login.php" method="POST">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <input type="submit" value="Login">
+            </form>
+        </div>
+
+        <!-- Register Form -->
+        <div class="form-container" id="register">
+            <h2>Register</h2>
+            <form action="register.php" method="POST">
+                <input type="text" name="register-username" placeholder="Username" required>
+                <input type="password" name="register-password" placeholder="Password" required>
+                <input type="text" name="register-email" placeholder="Email" required>
+                <input type="submit" value="Register">
+            </form>
+        </div>
+
+        <!-- Add Book Form -->
+        <div class="form-container" id="add-book">
+            <h2>Add Book</h2>
+            <form action="add_book.php" method="POST">
+                <input type="text" name="book-title" placeholder="Book Title" required>
+                <input type="text" name="book-author" placeholder="Author" required>
+                <input type="number" name="book-year" placeholder="Year" required>
+                <input type="submit" value="Add Book">
+            </form>
+        </div>
+
+        <!-- Update Book Form -->
+        <div class="form-container" id="update-book">
+            <h2>Update Book</h2>
+            <form action="update_book.php" method="POST">
+                <input type="number" name="book-id" placeholder="Book ID" required>
+                <input type="text" name="update-book-title" placeholder="New Book Title">
+                <input type="text" name="update-book-author" placeholder="New Author">
+                <input type="number" name="update-book-year" placeholder="New Year">
+                <input type="submit" value="Update Book">
+            </form>
+        </div>
+
+        <!-- Issue Book Form -->
+        <div class="form-container" id="issue-book">
+            <h2>Issue Book</h2>
+            <form action="issue_book.php" method="POST">
+                <input type="number" name="issue-book-id" placeholder="Book ID" required>
+                <input type="number" name="student-id" placeholder="Student ID" required>
+                <input type="submit" value="Issue Book">
+            </form>
+        </div>
+
+        <!-- Return Book Form -->
+        <div class="form-container" id="return-book">
+            <h2>Return Book</h2>
+            <form action="return_book.php" method="POST">
+                <input type="number" name="return-book-id" placeholder="Book ID" required>
+                <input type="number" name="return-student-id" placeholder="Student ID" required>
+                <input type="submit" value="Return Book">
+            </form>
+        </div>
+
+        <!-- Add Fine Form -->
+        <div class="form-container" id="make-fine">
+            <h2>Add Fine</h2>
+            <form action="make_fine.php" method="POST">
+                <input type="number" name="fine-student-id" placeholder="Student ID" required>
+                <input type="number" name="fine-amount" placeholder="Amount" step="0.01" required>
+                <input type="submit" value="Add Fine">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
