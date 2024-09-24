@@ -1,0 +1,144 @@
+#include <QApplication>
+#include <QTextEdit>
+#include <QLabel>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QWidget>
+#include <QTime>
+#include <QKeyEvent>
+#include <QMessageBox>
+#include <QStringList>
+#include <QRandomGenerator>
+
+class TypingSpeedCalculator : public QWidget {
+    Q_OBJECT
+
+private:
+    QTextEdit *userText;
+    QLabel *labelScore;
+    QLabel *labelText;
+    QPushButton *btnStart;
+    QPushButton *btnNewText;
+    QLabel *labelSpeed;
+    QLabel *labelAccuracy;
+
+    QStringList texts = {
+        "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+        "The way to get started is to quit talking and begin doing.",
+        "Your time is limited, so don't waste it living someone else's life.",
+        "If life were predictable it would cease to be life, and be without flavor.",
+        "If you look at what you have in life, you'll always have more.",
+        "If you set your goals ridiculously high and it's a failure, you will fail above everyone else's success.",
+        "Life is what happens when you're busy making other plans.",
+        "One day the people that don’t even believe in you will tell everyone how they met you.",
+        "The true meaning of life is to plant trees, under whose shade you do not expect to sit.",
+        "The quick brown fox jumps over the lazy dog."
+    };
+
+    double speed = 0;
+    double accuracy = 0;
+    QTime timeStart;
+
+public:
+    TypingSpeedCalculator() {
+        QVBoxLayout *layout = new QVBoxLayout(this);
+
+        labelScore = new QLabel("Score: ");
+        labelText = new QLabel("Welcome to typing speed calculator", this);
+        labelText->setAlignment(Qt::AlignCenter);
+        userText = new QTextEdit(this);
+        btnStart = new QPushButton("Start/Restart", this);
+        btnNewText = new QPushButton("New Text", this);
+        labelSpeed = new QLabel("Your typing speed is 0 LPS", this);
+        labelAccuracy = new QLabel("Your typing accuracy is 0%", this);
+
+        layout->addWidget(labelScore);
+        layout->addWidget(labelText);
+        layout->addWidget(userText);
+        layout->addWidget(btnStart);
+        layout->addWidget(btnNewText);
+        layout->addWidget(labelSpeed);
+        layout->addWidget(labelAccuracy);
+
+        setLayout(layout);
+        setWindowTitle("Typing Speed Calculator");
+
+        connect(btnStart, &QPushButton::clicked, this, &TypingSpeedCalculator::start);
+        connect(btnNewText, &QPushButton::clicked, this, &TypingSpeedCalculator::newText);
+        connect(userText, &QTextEdit::textChanged, this, &TypingSpeedCalculator::onTextChanged);
+    }
+
+private slots:
+    void start() {
+        timeStart.start();  // Start the timer
+        userText->clear();
+        labelSpeed->setText("Your typing speed is 0 LPS");
+        labelAccuracy->setText("Your typing accuracy is 0%");
+    }
+
+    void newText() {
+        QString randomText = texts[QRandomGenerator::global()->bounded(texts.size())];
+        labelText->setText(randomText);
+        labelScore->setText("Score: ");
+        userText->clear();
+        timeStart.restart();
+    }
+
+    void onTextChanged() {
+        if (timeStart.elapsed() > 0) {
+            calculateSpeed();
+            calculateAccuracy();
+        }
+    }
+
+    void calculateSpeed() {
+        int charsTyped = userText->toPlainText().length();
+        double elapsedTime = timeStart.elapsed() / 1000.0;  // Time in seconds
+        speed = charsTyped / elapsedTime;
+        labelSpeed->setText(QString("Your typing speed is %1 LPS").arg(speed, 0, 'f', 2));
+    }
+
+    void calculateAccuracy() {
+        QString originalText = labelText->text();
+        QString enteredText = userText->toPlainText();
+        accuracy = calculateAccuracyPercentage(originalText, enteredText);
+        labelAccuracy->setText(QString("Your typing accuracy is %1%").arg(accuracy, 0, 'f', 2));
+    }
+
+    double calculateAccuracyPercentage(const QString &originalText, const QString &enteredText) {
+        int maxLength = std::max(originalText.length(), enteredText.length());
+        int distance = levenshteinDistance(originalText, enteredText);
+        double similarity = (maxLength - distance) / (double)maxLength;
+        return similarity * 100.0;
+    }
+
+    int levenshteinDistance(const QString &s1, const QString &s2) {
+        int len1 = s1.length();
+        int len2 = s2.length();
+        QVector<QVector<int>> dp(len1 + 1, QVector<int>(len2 + 1));
+
+        for (int i = 0; i <= len1; i++) {
+            for (int j = 0; j <= len2; j++) {
+                if (i == 0) {
+                    dp[i][j] = j;
+                } else if (j == 0) {
+                    dp[i][j] = i;
+                } else {
+                    dp[i][j] = std::min({dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + (s1[i - 1] == s2[j - 1] ? 0 : 1)});
+                }
+            }
+        }
+        return dp[len1][len2];
+    }
+};
+
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+
+    TypingSpeedCalculator window;
+    window.show();
+
+    return app.exec();
+}
+
+#include "main.moc"

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            background: #007BFF;
+            color: white;
+        }
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            background: #333;
+            padding: 0;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+        }
+        nav ul li a:hover {
+            background: #575757;
+        }
+        main {
+            padding: 20px;
+        }
+        .form-section {
+            max-width: 500px;
+            margin: 20px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background: #007BFF;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        .hidden {
+            display: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div id="login-form" class="form-section">
+        <h1>Login</h1>
+        <form id="login" onsubmit="return authenticate(event)">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="hidden">
+        <header>
+            <h1>Library Management System</h1>
+            <p>Welcome, <span id="user-display"></span> | <a href="#" onclick="logout()">Logout</a></p>
+        </header>
+        <nav>
+            <ul id="nav-menu">
+                <!-- Navigation items will be added here dynamically based on user type -->
+            </ul>
+        </nav>
+        <main>
+            <!-- Sections for Librarian -->
+            <section id="librarian" class="section-content hidden">
+                <h2>Librarian Dashboard</h2>
+                <form id="add-book-form" class="form-section hidden">
+                    <h3>Add Book</h3>
+                    <div class="form-group">
+                        <label for="book-title">Title:</label>
+                        <input type="text" id="book-title" name="book-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-author">Author:</label>
+                        <input type="text" id="book-author" name="book-author" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-year">Year:</label>
+                        <input type="number" id="book-year" name="book-year" required>
+                    </div>
+                    <input type="submit" value="Add Book">
+                </form>
+                <form id="update-delete-book-form" class="form-section hidden">
+                    <h3>Update/Delete Book</h3>
+                    <div class="form-group">
+                        <label for="book-id">Book ID:</label>
+                        <input type="text" id="book-id" name="book-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-book-title">New Title:</label>
+                        <input type="text" id="update-book-title" name="update-book-title">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-book-author">New Author:</label>
+                        <input type="text" id="update-book-author" name="update-book-author">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-book-year">New Year:</label>
+                        <input type="number" id="update-book-year" name="update-book-year">
+                    </div>
+                    <input type="submit" value="Update Book">
+                    <button type="button" onclick="deleteBook()">Delete Book</button>
+                </form>
+                <form id="issue-book-form" class="form-section hidden">
+                    <h3>Issue Book</h3>
+                    <div class="form-group">
+                        <label for="issue-book-id">Book ID:</label>
+                        <input type="text" id="issue-book-id" name="issue-book-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-id">Student ID:</label>
+                        <input type="text" id="student-id" name="student-id" required>
+                    </div>
+                    <input type="submit" value="Issue Book">
+                </form>
+                <form id="return-book-form" class="form-section hidden">
+                    <h3>Return Book</h3>
+                    <div class="form-group">
+                        <label for="return-book-id">Book ID:</label>
+                        <input type="text" id="return-book-id" name="return-book-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="return-student-id">Student ID:</label>
+                        <input type="text" id="return-student-id" name="return-student-id" required>
+                    </div>
+                    <input type="submit" value="Return Book">
+                </form>
+                <form id="make-fine-form" class="form-section hidden">
+                    <h3>Make Fine</h3>
+                    <div class="form-group">
+                        <label for="fine-student-id">Student ID:</label>
+                        <input type="text" id="fine-student-id" name="fine-student-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fine-amount">Amount:</label>
+                        <input type="number" id="fine-amount" name="fine-amount" required>
+                    </div>
+                    <input type="submit" value="Make Fine">
+                </form>
+                <form id="update-material-form" class="form-section hidden">
+                    <h3>Update Material</h3>
+                    <div class="form-group">
+                        <label for="material-year">Year:</label>
+                        <input type="number" id="material-year" name="material-year" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="material-semester">Semester:</label>
+                        <input type="number" id="material-semester" name="material-semester" required>
+                    </div>
+                    <input type="submit" value="Update Material">
+                </form>
+                <form id="view-material-form" class="form-section hidden">
+                    <h3>View Material</h3>
+                    <div class="form-group">
+                        <label for="view-material-year">Year:</label>
+                        <input type="number" id="view-material-year" name="view-material-year" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="view-material-semester">Semester:</label>
+                        <input type="number" id="view-material-semester" name="view-material-semester" required>
+                    </div>
+                    <input type="submit" value="View Material">
+                </form>
+            </section>
+
+            <!-- Sections for User -->
+            <section id="user" class="section-content hidden">
+                <h2>User Dashboard</h2>
+                <form id="register-form" class="form-section hidden">
+                    <h3>Register</h3>
+                    <div class="form-group">
+                        <label for="register-username">Username:</label>
+                        <input type="text" id="register-username" name="register-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password:</label>
+                        <input type="password" id="register-password" name="register-password" required>
+                    </div>
+                    <input type="submit" value="Register">
+                </form>
+                <form id="search-book-form" class="form-section">
+                    <h3>Search Book</h3>
+                    <div class="form-group">
+                        <label for="search-title">
+                            <label for="search-title">Title:</label>
+                        <input type="text" id="search-title" name="search-title">
+                    </div>
+                    <div class="form-group">
+                        <label for="search-author">Author:</label>
+                        <input type="text" id="search-author" name="search-author">
+                    </div>
+                    <input type="submit" value="Search Book">
+                </form>
+                <form id="borrow-history-form" class="form-section">
+                    <h3>My Borrow History</h3>
+                    <table id="borrow-history-table">
+                        <thead>
+                            <tr>
+                                <th>Book Title</th>
+                                <th>Issue Date</th>
+                                <th>Expiration Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Borrow history rows will be dynamically inserted here -->
+                        </tbody>
+                    </table>
+                </form>
+                <form id="check-fine-form" class="form-section">
+                    <h3>Check Fine</h3>
+                    <div class="form-group">
+                        <label for="student-id-fine">Student ID:</label>
+                        <input type="text" id="student-id-fine" name="student-id-fine" required>
+                    </div>
+                    <input type="submit" value="Check Fine">
+                </form>
+                <form id="search-material-form" class="form-section">
+                    <h3>Search Material</h3>
+                    <div class="form-group">
+                        <label for="material-year-search">Year:</label>
+                        <input type="number" id="material-year-search" name="material-year-search" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="material-semester-search">Semester:</label>
+                        <input type="number" id="material-semester-search" name="material-semester-search" required>
+                    </div>
+                    <input type="submit" value="Search Material">
+                </form>
+                <form id="download-material-form" class="form-section">
+                    <h3>Download Material</h3>
+                    <div class="form-group">
+                        <label for="download-material-year">Year:</label>
+                        <input type="number" id="download-material-year" name="download-material-year" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="download-material-semester">Semester:</label>
+                        <input type="number" id="download-material-semester" name="download-material-semester" required>
+                    </div>
+                    <input type="submit" value="Download Material">
+                </form>
+                <form id="my-profile-form" class="form-section">
+                    <h3>My Profile</h3>
+                    <div class="form-group">
+                        <label for="profile-username">Username:</label>
+                        <input type="text" id="profile-username" name="profile-username" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-email">Email:</label>
+                        <input type="email" id="profile-email" name="profile-email" readonly>
+                    </div>
+                    <input type="button" value="Edit Profile" onclick="editProfile()">
+                </form>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; 2024 Library Management System</p>
+        </footer>
+    </div>
+
+    <script>
+        // JavaScript functionality
+
+        let userType = null; // 'librarian' or 'user'
+
+        function authenticate(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simulate authentication
+            if (username === 'librarian' && password === 'librarianpass') {
+                userType = 'librarian';
+            } else if (username === 'user' && password === 'userpass') {
+                userType = 'user';
+            } else {
+                alert('Invalid credentials');
+                return false;
+            }
+
+            showMainContent();
+            return false;
+        }
+
+        function showMainContent() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('main-content').classList.remove('hidden');
+            document.getElementById('user-display').textContent = userType.charAt(0).toUpperCase() + userType.slice(1);
+
+            if (userType === 'librarian') {
+                document.getElementById('librarian').classList.remove('hidden');
+                document.getElementById('user').classList.add('hidden');
+                setupLibrarianNav();
+            } else if (userType === 'user') {
+                document.getElementById('user').classList.remove('hidden');
+                document.getElementById('librarian').classList.add('hidden');
+                setupUserNav();
+            }
+        }
+
+        function setupLibrarianNav() {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.innerHTML = `
+                <li><a href="#" onclick="showForm('add-book-form')">Add Book</a></li>
+                <li><a href="#" onclick="showForm('update-delete-book-form')">Update/Delete Book</a></li>
+                <li><a href="#" onclick="showForm('issue-book-form')">Issue Book</a></li>
+                <li><a href="#" onclick="showForm('return-book-form')">Return Book</a></li>
+                <li><a href="#" onclick="showForm('make-fine-form')">Make Fine</a></li>
+                <li><a href="#" onclick="showForm('update-material-form')">Update Material</a></li>
+                <li><a href="#" onclick="showForm('view-material-form')">View Material</a></li>
+            `;
+        }
+
+        function setupUserNav() {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.innerHTML = `
+                <li><a href="#" onclick="showForm('search-book-form')">Search Book</a></li>
+                <li><a href="#" onclick="showForm('borrow-history-form')">My Borrow History</a></li>
+                <li><a href="#" onclick="showForm('check-fine-form')">Check Fine</a></li>
+                <li><a href="#" onclick="showForm('search-material-form')">Search Material</a></li>
+                <li><a href="#" onclick="showForm('download-material-form')">Download Material</a></li>
+                <li><a href="#" onclick="showForm('my-profile-form')">My Profile</a></li>
+            `;
+        }
+
+        function showForm(formId) {
+            const forms = document.querySelectorAll('.form-section');
+            forms.forEach(form => form.classList.add('hidden'));
+            document.getElementById(formId).classList.remove('hidden');
+        }
+
+        function logout() {
+            userType = null;
+            document.getElementById('login-form').classList.remove('hidden');
+            document.getElementById('main-content').classList.add('hidden');
+        }
+
+        function editProfile() {
+            const username = prompt('Enter new username');
+            const email = prompt('Enter new email');
+            if (username && email) {
+                document.getElementById('profile-username').value = username;
+                document.getElementById('profile-email').value = email;
+            }
+        }
+
+        // Example implementations for form submissions
+        document.getElementById('add-book-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Add book logic here
+            alert('Book added');
+        });
+
+        document.getElementById('update-delete-book-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Update or delete book logic here
+            alert('Book updated');
+        });
+
+        document.getElementById('issue-book-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Issue book logic here
+            alert('Book issued');
+        });
+
+        document.getElementById('return-book-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Return book logic here
+            alert('Book returned');
+        });
+
+        document.getElementById('make-fine-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Make fine logic here
+            alert('Fine added');
+        });
+
+        document.getElementById('update-material-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Update material logic here
+            alert('Material updated');
+        });
+
+        document.getElementById('view-material-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // View material logic here
+            alert('Material details displayed');
+        });
+
+        document.getElementById('register-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Registration logic here
+            alert('User registered');
+        });
+
+        document.getElementById('search-book-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Search book logic here
+            alert('Book search results');
+        });
+
+        document.getElementById('borrow-history-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Fetch and display borrow history logic here
+            alert('Borrow history displayed');
+        });
+
+        document.getElementById('check-fine-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Check fine logic here
+            alert('Fine details displayed');
+        });
+
+        document.getElementById('search-material-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Search material logic here
+            alert('Material search results');
+        });
+
+        document.getElementById('download-material-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Download material logic here
+            alert('Material downloaded');
+        });
+
+        document.getElementById('my-profile-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Edit profile logic here
+            alert('Profile updated');
+        });
+    </script>
+</body>
+</html>

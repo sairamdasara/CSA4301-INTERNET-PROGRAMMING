@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Kodaikanal Restaurant Booking System</title>
+<link rel="stylesheet" href="design.css">
+</head>
+<body>
+	<header>
+		<nav>
+			<ul>
+				<li><a href="#admin">Admin Registration</a></li>
+				<li><a href="#rooms">Rooms</a></li>
+				<li><a href="#booking">Booking</a></li>
+			</ul>
+		</nav>
+	</header>
+	<section id="admin">
+        <h2>Admin Registration</h2>
+		<form action="registration.php" method="post">
+			<label>Name:</label>
+			<input type="text" name="name"><br><br>
+			<label>Email:</label>
+			<input type="email" name="email"><br><br>
+			<label>Password:</label>
+			<input type="password" name="password"><br><br>
+			<input type="submit" value="Register">
+		</form>
+	</section>
+
+    <section id="rooms">
+        <h2>rooms</h2>
+        <form action="registration.php" method="post">
+            <label>roomno:</label>
+            <input type="int" name="roomno"><br><br>
+            <label>floorno:</label>
+            <input type="int" name="floorno"><br><br>
+            <input type="submit" register="register">
+        </form>
+    </section>
+
+	<section id="booking">
+		<h2>booking</h2>
+		<form action="registration.php" method="post">
+			<label>bookingname:</label>
+			<input type="text" name="booking name"><br><br>
+			<label>bookingyear:</label>
+			<input type="int" name="bookingyear"><br><br>
+			<input type="submit" name="add">
+		</form>
+	</section>
+</body>
+</html>
